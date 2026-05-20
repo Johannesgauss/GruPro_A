@@ -14,22 +14,33 @@ int main()
 		lint each_fight; cin>>each_fight;
 		fights.push_back(each_fight);
 	}
+	vector<ulint> fights_sum; fights_sum.push_back(0);
+	for (ulint i = 1; i < fights_num+1; i++) {
+		fights_sum.push_back(fights_sum[i-1] + fights[i-1]);
+	}
 	ulint max_score = 0;
-	ulint left = 0, right = 0;
 
 	lint hits = 0;
-	while (left <= right) {
-		while (right != fights_num - 1 && hits + fights[right+1] <= health) {
-			hits += fights[right];
-			right++;
+	for (ulint i = 0; i < fights_num+1; i++) {
+		ulint left = i, right = fights_num;
+		ulint current = (left+right)/2;
+		while (left <= right) {
+			//cout << fights_sum[current] << " " << fights_sum[i]<<endl;
+			if (fights_sum[current] - fights_sum[i] <= health) {
+				left = current + 1;
+				//puts("here0");
+			} else {
+				right = current-1;
+			}
+			current = (left+right)/2;
 		}
-		if (right - left > max_score)
-			max_score = right - left;
-		hits -= fights[left];
-		left++;
+		//cerr << i << " " << left <<" "<< right <<" "<< current <<" "<< endl;
+		//puts("left and right");
+				
+		if (current - i > max_score) {
+				max_score = current - i;
+		}
 	}
-	if (1 > max_score)
-		max_score = 1;
 	
 	cout<<max_score<<endl;
 
